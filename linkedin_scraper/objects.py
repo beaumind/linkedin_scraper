@@ -87,12 +87,14 @@ class Education(Institution):
     to_date = None
     description = None
     degree = None
+    field_of_study = None
 
-    def __init__(self, from_date=None, to_date=None, description=None, degree=None):
+    def __init__(self, from_date=None, to_date=None, description=None, degree=None, field_of_study=None):
         self.from_date = from_date
         self.to_date = to_date
         self.description = description
         self.degree = degree
+        self.field_of_study = field_of_study
 
     def __repr__(self):
         return "{degree} at {company} from {from_date} to {to_date}".format(
