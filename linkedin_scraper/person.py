@@ -116,6 +116,10 @@ class Person(Scraper):
             exp = None
 
         if exp is not None:
+            try:
+                exp.find_element_by_class_name("pv-profile-section__see-more-inline").click()
+            except:
+                print("skip")
             for position in exp.find_elements_by_class_name("pv-position-entity"):
                 position_title = position.find_element_by_tag_name("h3").text.strip()
                 try:
@@ -164,7 +168,7 @@ class Person(Scraper):
                 self.add_experience(experience)
 
     def scrape_about(self):
-        # get about
+        driver = self.driver
         try:
             see_more = WebDriverWait(driver, 0).until(
                 EC.presence_of_element_located(
