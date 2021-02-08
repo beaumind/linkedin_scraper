@@ -63,7 +63,7 @@ class Person(Scraper):
         self.driver = driver
 
         if scrape:
-            self.scrape(close_on_complete)
+            self.scrape_min()
 
     def add_about(self, about):
         self.about.append(about)
@@ -105,7 +105,7 @@ class Person(Scraper):
     def scrape_experiences(self):
         driver = self.driver
         driver.execute_script(
-            "window.scrollTo(0, Math.ceil(document.body.scrollHeight/2));"
+            "window.scrollTo(0, Math.ceil(document.body.scrollHeight/3));"
         )
         try:
             _ = WebDriverWait(driver, 0).until(
@@ -119,7 +119,8 @@ class Person(Scraper):
             try:
                 exp.find_element_by_class_name("pv-profile-section__see-more-inline").click()
             except:
-                print("skip")
+                print("skip 1")
+
             for position in exp.find_elements_by_class_name("pv-position-entity"):
                 position_title = position.find_element_by_tag_name("h3").text.strip()
                 try:
