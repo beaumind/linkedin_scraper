@@ -139,8 +139,9 @@ class Person(Scraper):
                             .find_elements_by_tag_name("span")[1]
                             .text.strip()
                     )
-                    from_date = " ".join(times.split(" ")[:2])
-                    to_date = " ".join(times.split(" ")[3:])
+                    from_date = (times.split("–")[0]).strip()
+                    to_date = (times.split("–")[1]).strip()
+
                     duration = (
                         position.find_elements_by_tag_name("h4")[1]
                             .find_elements_by_tag_name("span")[1]
