@@ -43,6 +43,7 @@ class Person(Scraper):
         self.phone = None
         self.mobile = None
         self.email = None
+        self.profile_pic = None
 
         if driver is None:
             try:
@@ -99,6 +100,7 @@ class Person(Scraper):
         self.scrape_location()
         self.scrape_skills()
         self.scrape_about()
+        self.scrape_profile_pic()
         self.scrape_info()
         driver.quit()
 
@@ -275,6 +277,18 @@ class Person(Scraper):
                 print("skip")
             for skill in driver.find_elements_by_class_name("pv-skill-category-entity__name-text"):
                 self.skills.append(skill.text.strip())
+
+    def scrape_profile_pic(self):
+        driver = self.driver
+        driver.execute_script(
+            "window.scrollTo(0, 0);"
+        )
+
+        try:
+            element = driver.find_element_by_class_name('pv-top-card--photo')
+            self.profile_pic = element.find_element_by_tag_name('img').get_attribute('src')
+        except:
+            self.profile_pic = None
 
     def scrape_info(self):
         driver = self.driver
