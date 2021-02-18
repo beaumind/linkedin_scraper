@@ -124,52 +124,83 @@ class Person(Scraper):
                 print("skip 1")
 
             for position in exp.find_elements_by_class_name("pv-position-entity"):
-                position_title = position.find_element_by_tag_name("h3").text.strip()
                 try:
-                    company = position.find_elements_by_tag_name("p")[1].text.strip()
+                    company = \
+                    position.find_element_by_class_name('pv-entity__company-summary-info').find_elements_by_tag_name(
+                        'span')[1].text.strip()
+                    positions_section = position.find_element_by_class_name('pv-entity__position-group');
+                    for item in positions_section.find_elements_by_class_name('pv-entity__position-group-role-item'):
+                        position_title = item.find_element_by_tag_name("h3").find_elements_by_tag_name('span')[
+                            1].text.strip()
+
+                        try:
+                            times = str(
+                                item.find_element_by_class_name("pv-entity__date-range")
+                                    .find_elements_by_tag_name("span")[1]
+                                    .text.strip()
+                            )
+                            from_date = (times.split("–")[0]).strip()
+                            to_date = (times.split("–")[1]).strip()
+                        except:
+                            from_date = None
+                            to_date = None
+
+                        experience = Experience(
+                            position_title=position_title,
+                            from_date=from_date,
+                            to_date=to_date,
+                        )
+
+                        experience.institution_name = company
+                        self.add_experience(experience)
+                except Exception as e:
+                    position_title = position.find_element_by_tag_name("h3").text.strip()
                     try:
-                        seperator = position.find_elements_by_tag_name("p")[1].find_element_by_class_name('separator').text.strip()
-                        company = company.replace(seperator, '').strip()
+                        company = position.find_elements_by_tag_name("p")[1].text.strip()
+                        try:
+                            seperator = position.find_elements_by_tag_name("p")[1].find_element_by_class_name(
+                                'separator').text.strip()
+                            company = company.replace(seperator, '').strip()
+                        except:
+                            print('none')
                     except:
-                        print('none')
-                except:
-                    company = None
+                        company = None
 
-                try:
-                    times = str(
-                        position.find_elements_by_tag_name("h4")[0]
-                            .find_elements_by_tag_name("span")[1]
-                            .text.strip()
+                    try:
+                        times = str(
+                            position.find_elements_by_tag_name("h4")[0]
+                                .find_elements_by_tag_name("span")[1]
+                                .text.strip()
+                        )
+                        from_date = (times.split("–")[0]).strip()
+                        to_date = (times.split("–")[1]).strip()
+
+                        duration = (
+                            position.find_elements_by_tag_name("h4")[1]
+                                .find_elements_by_tag_name("span")[1]
+                                .text.strip()
+                        )
+                    except:
+                        from_date, to_date, duration = (None, None, None)
+
+                    try:
+                        location = (
+                            position.find_elements_by_tag_name("h4")[2]
+                                .find_elements_by_tag_name("span")[1]
+                                .text.strip()
+                        )
+                    except:
+                        location = None
+
+                    experience = Experience(
+                        position_title=position_title,
+                        from_date=from_date,
+                        to_date=to_date,
+                        duration=duration,
+                        location=location,
                     )
-                    from_date = (times.split("–")[0]).strip()
-                    to_date = (times.split("–")[1]).strip()
-
-                    duration = (
-                        position.find_elements_by_tag_name("h4")[1]
-                            .find_elements_by_tag_name("span")[1]
-                            .text.strip()
-                    )
-                except:
-                    from_date, to_date, duration = (None, None, None)
-
-                try:
-                    location = (
-                        position.find_elements_by_tag_name("h4")[2]
-                            .find_elements_by_tag_name("span")[1]
-                            .text.strip()
-                    )
-                except:
-                    location = None
-
-                experience = Experience(
-                    position_title=position_title,
-                    from_date=from_date,
-                    to_date=to_date,
-                    duration=duration,
-                    location=location,
-                )
-                experience.institution_name = company
-                self.add_experience(experience)
+                    experience.institution_name = company
+                    self.add_experience(experience)
 
     def scrape_about(self):
         driver = self.driver
@@ -298,11 +329,12 @@ class Person(Scraper):
 
         try:
             driver.get(self.linkedin_url + '/detail/contact-info/')
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//*[@aria-labelledby='pv-contact-info']")))
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//*[@aria-labelledby='pv-contact-info']")))
             element = driver.find_element_by_xpath("//*[@aria-labelledby='pv-contact-info']")
             profile_header = element.find_element_by_class_name('pv-contact-info__header').text.strip()
             self.first_name = profile_header.replace('’s Profile', '')
-            self.last_name = self.name.replace(self.first_name+' ', '')
+            self.last_name = self.name.replace(self.first_name + ' ', '')
         except:
             self.first_name = None
             self.last_name = None
