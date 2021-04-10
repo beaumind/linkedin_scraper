@@ -333,6 +333,7 @@ class Person(Scraper):
                 EC.presence_of_element_located((By.XPATH, "//*[@aria-labelledby='pv-contact-info']")))
             element = driver.find_element_by_xpath("//*[@aria-labelledby='pv-contact-info']")
             profile_header = element.find_element_by_class_name('pv-contact-info__header').text.strip()
+
             self.first_name = profile_header.replace('’s Profile', '')
             self.last_name = self.name.replace(self.first_name + ' ', '')
         except:
