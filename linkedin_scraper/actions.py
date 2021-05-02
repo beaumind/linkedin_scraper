@@ -32,3 +32,5 @@ def login(driver, email=None, password=None):
     driver.findElement (By.xpath ("//*[contains(text(),'Skip')]")).click()
   except:
     element = WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.ID, "global-nav-typeahead")))
+
+  element = WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.ID, "global-nav-typeahead")))
