@@ -1,4 +1,5 @@
 import getpass
+import time
 from linkedin_scraper.objects import Scraper
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -27,12 +28,17 @@ def login(driver, email=None, password=None):
   password_elem.send_keys(password)
   password_elem.submit()
 
+  time.sleep(5)
+  print(driver.current_url)
   try:
     WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.CLASS_NAME, "remember-me-prompt")))
     driver.findElement (By.xpath ("//*[contains(text(),'Not Now')]")).click()
   except:
-    WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.CLASS_NAME, "cp-challenge")))
-    driver.findElement(By.xpath("//*[contains(text(),'Skip')]")).click()
+    try:
+      WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.CLASS_NAME, "cp-challenge")))
+      driver.findElement(By.xpath("//*[contains(text(),'Skip')]")).click()
+    except:
+      element = WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.ID, "global-nav-typeahead")))
   finally:
     element = WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.ID, "global-nav-typeahead")))
 
