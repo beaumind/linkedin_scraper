@@ -31,6 +31,9 @@ def login(driver, email=None, password=None):
     WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.CLASS_NAME, "remember-me-prompt")))
     driver.findElement (By.xpath ("//*[contains(text(),'Not Now')]")).click()
   except:
+    WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.CLASS_NAME, "cp-challenge")))
+    driver.findElement(By.xpath("//*[contains(text(),'Skip')]")).click()
+  finally:
     element = WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.ID, "global-nav-typeahead")))
 
   element = WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.ID, "global-nav-typeahead")))
