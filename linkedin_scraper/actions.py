@@ -16,8 +16,9 @@ def page_has_loaded(driver):
 
 def login(driver, email=None, password=None):
   if not email or not password:
+    print('here')
     email, password = __prompt_email_password()
-
+  print('there')
   driver.get("https://www.linkedin.com/login")
   element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "username")))
 
