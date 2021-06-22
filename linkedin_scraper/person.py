@@ -89,10 +89,11 @@ class Person(Scraper):
 
     def scrape_min(self, close_on_complete=True):
         driver = self.driver
-        root = driver.find_element_by_class_name(self.__TOP_CARD)
-        self.name = root.find_elements_by_xpath("//section/div/div/div/*/li")[
-            0
-        ].text.strip()
+        print(driver.current_url)
+        # root = driver.find_element_by_class_name(self.__TOP_CARD)
+        # self.name = root.find_elements_by_xpath("//section/div/div/div/*/li")[
+        #     0
+        # ].text.strip()
 
         self.scrape_experiences()
         self.scrape_educations()
@@ -332,6 +333,7 @@ class Person(Scraper):
             WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, "//*[@aria-labelledby='pv-contact-info']")))
             element = driver.find_element_by_xpath("//*[@aria-labelledby='pv-contact-info']")
+            self.name = driver.find_element_by_class_name("pv-contact-info").text.strip()
             profile_header = element.find_element_by_class_name('pv-contact-info__header').text.strip()
 
             self.first_name = profile_header.replace('’s Profile', '')
