@@ -29,18 +29,12 @@ def login(driver, email=None, password=None):
   password_elem.send_keys(password)
   password_elem.submit()
 
-  time.sleep(5)
   print(driver.current_url)
   try:
-    WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.CLASS_NAME, "remember-me-prompt")))
-    driver.findElement (By.xpath ("//*[contains(text(),'Not Now')]")).click()
-  except:
-    try:
-      WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.CLASS_NAME, "cp-challenge")))
-      driver.findElement(By.xpath("//*[contains(text(),'Skip')]")).click()
-    except:
-      element = WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.ID, "global-nav-typeahead")))
-  finally:
-    element = WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.ID, "global-nav-typeahead")))
-
+    WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.ID, "remember-me-prompt__form-primary")))
+    driver.find_element_by_class_name("btn__primary--large").click()
+  except Exception as e:
+    print(str(e))
+  print('DONE')
+  time.sleep(5)
   element = WebDriverWait(driver, 0).until(EC.presence_of_element_located((By.ID, "global-nav-typeahead")))
